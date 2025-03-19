@@ -32,3 +32,5 @@ class Question(BaseModel):
 
 class QuestionGenerationResponse(BaseModel):
     questions: List[Question]
+
+

@@ -35,13 +35,3 @@ def grammar_check(text: str):
         result = grammar(sentence)
         results.append(result)
     return results
-
-if __name__ == "__main__":
-    sample_text = "This is an example sentence with error. And here is another one with, mistake"
-    corrections = grammar_check(sample_text)
-    
-    for correction in corrections:
-        print("Original:", correction.sentence)
-        print("Corrected:", correction.corrected_sentence)
-        print("Errors:", correction.errors)
-        print("-" * 40)
