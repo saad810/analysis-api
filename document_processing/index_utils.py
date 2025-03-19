@@ -1,5 +1,5 @@
 import re
-from process_docs import process_text
+from docs import process_text
 from langdetect import detect
 from constants import EMBEDDINGS_MODEL
 from langchain_text_splitters import RecursiveCharacterTextSplitter

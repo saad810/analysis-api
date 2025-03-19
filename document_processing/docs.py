@@ -1,7 +1,5 @@
 import fitz,os
 
-
-
 def process_text(file_path):
     
     doc = fitz.open(file_path)

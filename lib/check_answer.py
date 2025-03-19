@@ -1,16 +1,6 @@
-from features.openai_config import client
-from pydantic import BaseModel
-from index_queries import search_similar_materials
-from typing import List
+from db_queries.queries import search_similar_materials
+from models.schema_models import AnswerValidation
 
-class IncorrectFact(BaseModel):
-    statement: str  # Example: "World War 1 did not happen in 1990"
-    explanation: str  # Example: "World War 1 started in 1914 and ended in 1918."
-
-class AnswerValidation(BaseModel):
-    is_correct: bool
-    score: float  # Confidence score between 0 and 1
-    incorrect_facts: List[IncorrectFact]  # List of incorrect facts
 
 def validate_answer(question: str, user_answer: str, subject: str, client) -> dict:
     # Retrieve context from Pinecone

@@ -1,12 +1,10 @@
 from flask import Flask, request, jsonify
 from flask_restx import Api, Resource, fields
-from pydantic import BaseModel
-from features.grammar import grammar_check  # Grammar check function
-from check_answer import validate_answer  # Answer validation function
-from features.openai_config import client
+from lib.grammar_check import grammar_check  # Grammar check function
+from lib.check_answer import validate_answer  # Answer validation function
+from config.openai import client
 from flask_cors import CORS
-# Import your generation functions:
-from generate_questions import generate, extract_all_topics, generate_questions
+from lib.generate_questions import generate, extract_all_topics, generate_questions
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})  

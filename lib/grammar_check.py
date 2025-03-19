@@ -1,19 +1,13 @@
 from langdetect import detect
 import re
-from typing import List
-from pydantic import BaseModel
-from features.openai_config import client
+from config.openai import client
+from models.schema_models import GrammarModel
 
 def split_english(text: str):
     detected_lang = detect(text)
     if detected_lang != "en":
         raise ValueError(f"Text is not in English. Detected language: {detected_lang}")
     return re.split(r'(?<=[.!?,:;…])\s+|(?<=\.\.\.)\s+', text.strip())
-
-class GrammarModel(BaseModel):
-    sentence: str
-    corrected_sentence: str
-    errors: List[str]  # Explicitly specify list items as strings
 
 def grammar(sentence: str) -> GrammarModel:
     completion = client.beta.chat.completions.parse(

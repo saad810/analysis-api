@@ -1,14 +1,9 @@
-from pydantic import BaseModel
-from typing import List, Literal, Union
-from features.openai_config import client
+from config.openai import client
+from models.schema_models import TopicExtractionResponse,QuestionGenerationResponse
 from config.pinecone import idx
+from typing import List
+from constants import QuestionType
 
-class Subtopic(BaseModel):
-    topic: str
-    subtopics: List[str]
-
-class TopicExtractionResponse(BaseModel):
-    main_topics: List[Subtopic]
 
 def extract_all_topics(results: List[dict]) -> TopicExtractionResponse:
     """Extracts main topics and subtopics from all search results."""
@@ -35,16 +30,7 @@ def extract_all_topics(results: List[dict]) -> TopicExtractionResponse:
     return response.choices[0].message.parsed
 
 # Define allowed question types
-QuestionType = Literal["mcq", "true_false", "text_based", "fill_in_the_blank"]
 
-class Question(BaseModel):
-    type: QuestionType
-    question: str
-    options: Union[List[str], None] = None  # Only for MCQs
-    answer: str  # Correct answer
-
-class QuestionGenerationResponse(BaseModel):
-    questions: List[Question]
 
 def generate_questions(main_topic: str, subtopic: str, context: str, question_type: QuestionType, num_questions: int = 5) -> QuestionGenerationResponse:
     """Generates questions of a specified type based on a selected topic, subtopic, and context."""

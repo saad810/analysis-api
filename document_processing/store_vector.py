@@ -1,6 +1,6 @@
 
 import logging
-from process_docs import get_pdf_metadata, get_file_extension, get_file_name
+from document_processing.docs import get_pdf_metadata, get_file_extension, get_file_name
 from index_utils import generate_embeddings
 from dotenv import load_dotenv
 from config.pinecone import idx

@@ -1,5 +1,5 @@
 import logging
-from index_utils import get_embeddings  # Ensure this generates a single embedding for queries
+from document_processing.index_utils import get_embeddings  # Ensure this generates a single embedding for queries
 from config.pinecone import idx  # Use the existing Pinecone index
 
 def search_similar_materials(query_text, client, subject, top_k=5, threshold=0.45):
