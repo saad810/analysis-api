@@ -4,10 +4,12 @@ from pydantic import BaseModel
 from features.grammar import grammar_check  # Grammar check function
 from check_answer import validate_answer  # Answer validation function
 from features.openai_config import client
+from flask_cors import CORS
 # Import your generation functions:
 from generate_questions import generate, extract_all_topics, generate_questions
 
 app = Flask(__name__)
+CORS(app, resources={r"/*": {"origins": "*"}})  
 
 # Enable Swagger UI at /docs
 api = Api(
@@ -109,7 +111,8 @@ generation_request_model = api.model(
     {
         "book": fields.String(required=True, description="Book or text title"),
         "subject": fields.String(required=True, description="Subject area"),
-        "num_questions": fields.Integer(required=False, default=5, description="Number of questions to generate")
+        "num_questions": fields.Integer(required=False, default=5, description="Number of questions to generate"),
+        "type": fields.String(required=False, default="text_based", description="Type of questions to generate")
     }
 )
 
@@ -132,6 +135,7 @@ class QuestionGenerationResource(Resource):
         data = request.get_json()
         book = data.get("book")
         subject = data.get("subject")
+        question_type = data.get("type", "text_based")  # Default to text-based
         num_questions = data.get("num_questions", 5)
         
         # Generate text results
@@ -149,15 +153,22 @@ class QuestionGenerationResource(Resource):
         # Access main topics from the TopicExtractionResponse object
         main_topic_names = [sub.topic for sub in topics.main_topics]
         
+        if len(main_topic_names) < 2:
+            return {"error": "Not enough topics extracted."}, 400
+        
         # Generate questions using the first two main topics and the combined texts as context
         questions_response = generate_questions(
             main_topic=main_topic_names[0],
             subtopic=main_topic_names[1],
             context=combined_texts,
+            question_type=question_type,
             num_questions=num_questions
+            
         )
-        questions_list = questions_response.questions
+        # questions_list = questions_response.questions
         
+        # return {"questions": questions_list}, 200
+        questions_list = [q.dict() if hasattr(q, "dict") else str(q) for q in questions_response.questions]
         return {"questions": questions_list}, 200
 
 # Add namespaces to API

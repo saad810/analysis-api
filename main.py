@@ -63,7 +63,7 @@ def main():
     topics = extract_all_topics(results)
     combined_texts = "\n".join(["\n".join(res["text"]) for res in results])
     # print(type(topics))
-    print(topics)
+    # print(topics)
 
     # Use the main_topics attribute from the TopicExtractionResponse object.
     main_topic_names = [sub.topic for sub in topics.main_topics]
@@ -75,6 +75,7 @@ def main():
     # Generate questions using your function
     questions_response = generate_questions(
         main_topic=main_topic_names[0],
+        question_type="multiple-choice",
         subtopic=main_topic_names[1],
         context=combined_texts,
         num_questions=5
